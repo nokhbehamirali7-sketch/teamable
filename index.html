@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Teamable App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h1>Teamable Application</h1>
+    <button id="toggleThemeBtn">Toggle Theme</button>
+</header>
+
+<nav>
+    <ul>
+        <li><a href="#" class="nav-link active">Home</a></li>
+        <li><a href="#" class="nav-link">About</a></li>
+        <li><a href="#" class="nav-link">Contact</a></li>
+    </ul>
+</nav>
+
+<main>
+    <section>
+        <h2>User Registration Form</h2>
+
+        <form id="userForm">
+            <label>Username</label>
+            <input type="text" id="username" required>
+
+            <label>Email</label>
+            <input type="email" id="email" required>
+
+            <label>Experience (0-10)</label>
+            <input type="range" id="experience" min="0" max="10">
+
+            <button type="submit">Submit</button>
+            <button type="button" id="toggleResultBtn">Hide Result</button>
+        </form>
+
+        <div id="resultBox" class="hidden"></div>
+    </section>
+
+    <aside id="asideBox">
+        <p>Aside content</p>
+        <button id="toggleAsideBtn">Toggle Aside</button>
+    </aside>
+</main>
+
+<footer>
+    <p id="footerText">Copyright 2025</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
