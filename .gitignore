@@ -1,0 +1,4 @@
+*.msi
+node_modules/
+.env
+dist/

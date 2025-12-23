@@ -2,55 +2,143 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Teamable App</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teamable Application</title>
+    <!-- Basic CSS for better visual -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* Padding doesn't increase total width */
+        }
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+        button {
+            background-color: #5cb85c;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+        #message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none; /* Hidden by default */
+        }
+        .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+        }
+        .error {
+            background-color: #f2dede;
+            color: #a94442;
+            border: 1px solid #ebccd1;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h1>Share Your Teamable Experience</h1>
+        
+        <form id="experienceForm">
+            <label for="teamName">Team Name:</label>
+            <input type="text" id="teamName" name="teamName" required>
 
-<header>
-    <h1>Teamable Application</h1>
-    <button id="toggleThemeBtn">Toggle Theme</button>
-</header>
+            <label for="member">Team Member Name:</label>
+            <input type="text" id="member" name="member" required>
 
-<nav>
-    <ul>
-        <li><a href="#" class="nav-link active">Home</a></li>
-        <li><a href="#" class="nav-link">About</a></li>
-        <li><a href="#" class="nav-link">Contact</a></li>
-    </ul>
-</nav>
+            <label for="experience">Experience Details:</label>
+            <textarea id="experience" name="experience" required></textarea>
 
-<main>
-    <section>
-        <h2>User Registration Form</h2>
-
-        <form id="userForm">
-            <label>Username</label>
-            <input type="text" id="username" required>
-
-            <label>Email</label>
-            <input type="email" id="email" required>
-
-            <label>Experience (0-10)</label>
-            <input type="range" id="experience" min="0" max="10">
-
-            <button type="submit">Submit</button>
-            <button type="button" id="toggleResultBtn">Hide Result</button>
+            <button type="submit">Submit Experience</button>
         </form>
 
-        <div id="resultBox" class="hidden"></div>
-    </section>
+        <div id="message"></div>
+    </div>
 
-    <aside id="asideBox">
-        <p>Aside content</p>
-        <button id="toggleAsideBtn">Toggle Aside</button>
-    </aside>
-</main>
+    <script>
+        const form = document.getElementById('experienceForm');
+        const messageDiv = document.getElementById('message');
 
-<footer>
-    <p id="footerText">Copyright 2025</p>
-</footer>
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevents the default form refresh
 
-<script src="script.js"></script>
+            // 1. Collect form data
+            const experienceData = {
+                teamName: document.getElementById('teamName').value,
+                member: document.getElementById('member').value,
+                experience: document.getElementById('experience').value
+            };
+
+            messageDiv.style.display = 'none'; // Hide previous message
+
+            try {
+                // 2. Send data to the backend API
+                const response = await fetch('http://localhost:3000/api/experience', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(experienceData)
+                });
+
+                // 3. Handle response
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Success!
+                    messageDiv.className = 'success';
+                    messageDiv.innerHTML = `Success! ${result.message}`;
+                    form.reset(); // Clear the form
+                } else {
+                    // Server error (e.g., 500)
+                    messageDiv.className = 'error';
+                    messageDiv.innerHTML = `Error: ${result.message || 'Data could not be saved.'}`;
+                }
+
+            } catch (error) {
+                // Network error (e.g., backend server is not running)
+                messageDiv.className = 'error';
+                messageDiv.innerHTML = `Network Error: Could not connect to the server at http://localhost:3000. Is the backend running?`;
+                console.error('Fetch error:', error);
+            }
+
+            messageDiv.style.display = 'block'; // Show the new message
+        });
+    </script>
 </body>
 </html>
